@@ -30,6 +30,8 @@ temp/
 temp_*/
 temp_storage/
 PropertySheets/
+priv/
+priv_*/
 
 # Build results
 [Dd]ebug/
