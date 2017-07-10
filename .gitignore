@@ -10,13 +10,37 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.props
+
+licence for header.txt
+
+# wip folders
+
+
+# private folders
+extlibs/
+backup/
+backup_*/
+test/
+test_*/
+temp/
+temp_*/
+temp_storage/
+PropertySheets/
+
 # Build results
 [Dd]ebug/
+[Dd]ebug Static/
 [Dd]ebugPublic/
 [Rr]elease/
+[Rr]elease Static/
 [Rr]eleases/
 x64/
 x86/
+build/
 bld/
 [Bb]in/
 [Oo]bj/
