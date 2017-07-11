@@ -147,9 +147,9 @@ int main()
 			movement *= 0.707f;
 		objects[0].move(movement * movementSpeed * controlMultiplier * dt);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::RBracket))
 			objects[0].scale({ 1.f + (scaleSpeed * controlMultiplier * dt), 1.f + (scaleSpeed * controlMultiplier * dt) });
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LBracket))
 			objects[0].scale({ 1.f / (1.f + (scaleSpeed * controlMultiplier * dt)), 1.f / (1.f + (scaleSpeed * controlMultiplier * dt)) });
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period))
