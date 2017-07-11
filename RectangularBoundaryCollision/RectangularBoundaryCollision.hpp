@@ -29,13 +29,13 @@ template <class T1, class T2>
 bool areColliding(const T1& object1, const T2& object2, const int collisionLevel = -1)
 {
 	// LEVEL 0 (axis-aligned bounding box)
-	const bool level0{ object1.getGlobalBounds().intersects(object2.getGlobalBounds()) };
+	const sf::Transform transform1{ object1.getTransform() };
+	const sf::Transform transform2{ object2.getTransform() };
+	const bool level0{ transform1.transformRect(object1.getLocalBounds()).intersects(transform2.transformRect(object2.getLocalBounds())) };
 	if (!level0 || collisionLevel == 0)
 		return level0;
 
 	// LEVEL 1 (any corners inside opposite rectangle)
-	const sf::Transform transform1{ object1.getTransform() };
-	const sf::Transform transform2{ object2.getTransform() };
 	const sf::Transform inverseTransform1{ object1.getInverseTransform() };
 	const sf::Transform inverseTransform2{ object2.getInverseTransform() };
 	const sf::FloatRect rect1Bounds{ object1.getLocalBounds() };
