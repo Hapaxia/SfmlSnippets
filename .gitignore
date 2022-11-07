@@ -7,13 +7,14 @@
 *.userosscache
 *.sln.docstates
 
-# User-specific files (MonoDevelop/Xamarin Studio)
-*.userprefs
-
 *.sln
 *.vcxproj
 *.vcxproj.filters
 *.props
+*.vc.db
+*.vc.vc.opendb
+
+*.bak
 
 licence for header.txt
 
@@ -25,20 +26,23 @@ extlibs/
 backup/
 backup_*/
 test/
+test*/
 test_*/
 temp/
+temp*/
 temp_*/
 temp_storage/
 PropertySheets/
-priv/
-priv_*/
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
 
 # Build results
 [Dd]ebug/
-[Dd]ebug Static/
+[Dd]ebugStatic/
 [Dd]ebugPublic/
 [Rr]elease/
-[Rr]elease Static/
+[Rr]eleaseStatic/
 [Rr]eleases/
 x64/
 x86/
