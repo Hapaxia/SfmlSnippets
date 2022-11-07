@@ -39,7 +39,7 @@
 //       CONTROLS
 //       --------
 //
-//   MOUSE			        hover over a text character
+//   MOUSE			        hover cursor over a text character
 //   ESC                    quit
 //
 //
