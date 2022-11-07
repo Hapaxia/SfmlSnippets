@@ -1,4 +1,4 @@
-Rectangular Boundary Collision (https://github.com/Hapaxia/SfmlSnippets/RectangularBoundaryCollision)
+Rectangular Boundary Collision (https://github.com/Hapaxia/SfmlSnippets/tree/master/RectangularBoundaryCollision)
 
 Copyright (c) 2017 M.J.Silk
 
