@@ -1,5 +1,5 @@
-#ifndef TRIANGLES_EXTRACTOR_HPP
-#define TRIANGLES_EXTRACTOR_HPP
+#ifndef HAPAXIA_SFML_SNIPPETS_TRIANGLES_EXTRACTOR_HPP
+#define HAPAXIA_SFML_SNIPPETS_TRIANGLES_EXTRACTOR_HPP
 
 #include <SFML/Graphics.hpp>
 
@@ -97,4 +97,4 @@ sf::VertexArray vertexArrayFrom(const sf::VertexArray& vertexArray)
 }
 
 } // namespace trianglesExtractor
-#endif // TRIANGLES_EXTRACTOR_HPP
+#endif // HAPAXIA_SFML_SNIPPETS_TRIANGLES_EXTRACTOR_HPP
