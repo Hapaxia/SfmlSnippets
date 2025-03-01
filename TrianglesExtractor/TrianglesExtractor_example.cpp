@@ -2,7 +2,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2023-2024 M.J.Silk
+// Copyright (c) 2023-2025 M.J.Silk
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,9 +45,8 @@
 //       --------
 //
 //   1			            change base vertex array primitive to triangle fan (also re-extracts triangles)
-//   2			            change base vertex array primitive to triangle fan (also re-extracts triangles)
-//   3			            change base vertex array primitive to triangle fan (also re-extracts triangles)
-//   4			            change base vertex array primitive to triangle fan (also re-extracts triangles)
+//   2			            change base vertex array primitive to triangle strip (also re-extracts triangles)
+//   3			            change base vertex array primitive to triangles (also re-extracts triangles)
 // 
 //   Q			            change base vertex array primitive to line strip (does not affect extracted triangles vertex array)
 //   W                      change extracted triangles vertex array primitive to line strip (does not affect base vertex array)
@@ -62,6 +61,8 @@
 //        ----
 //
 //    You may also need to adjust the path of the included header ("TrianglesExtractor.hpp") depending on your approach.
+// 
+//    This example is for use with SFML 3.
 //
 //
 ////////////////////////////////////////////////////////////////
@@ -96,7 +97,7 @@ int main()
 	sf::Transform vertexArrayTrianglesTransform;
 	vertexArrayTrianglesTransform.translate({ 250.f, 0.f });
 
-	sf::RenderWindow window(sf::VideoMode(550u, 250u), "Triangles Extractor - example");
+	sf::RenderWindow window(sf::VideoMode({ 550u, 250u }), "Triangles Extractor - example");
 	while (window.isOpen())
 	{
 		// render
@@ -106,46 +107,42 @@ int main()
 		window.display();
 
 		// events
-		sf::Event event;
-		while (window.pollEvent(event))
+		while (const auto event{ window.pollEvent() })
 		{
-			if ((event.type == sf::Event::Closed) || ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)))
+			if (event->is<sf::Event::Closed>())
 				window.close();
-			switch (event.type)
+			else if (const auto keyPressed{ event->getIf<sf::Event::KeyPressed>() })
 			{
-			case sf::Event::KeyPressed:
-				switch (event.key.scancode)
+				switch (keyPressed->code)
 				{
-				case sf::Keyboard::Scancode::Q: // set primitive of base vertex array to line strip
-					vertexArray.setPrimitiveType(sf::LineStrip);
+				case sf::Keyboard::Key::Escape:
+					window.close();
 					break;
-				case sf::Keyboard::Scancode::W: // set primitive of extracted triangles vertex array to line strip
-					vertexArrayTriangles.setPrimitiveType(sf::LineStrip);
+				case sf::Keyboard::Key::Q: // set primitive of base vertex array to line strip
+					vertexArray.setPrimitiveType(sf::PrimitiveType::LineStrip);
 					break;
-				case sf::Keyboard::Scancode::E: // set primitive of extracted triangles vertex array to lines
-					vertexArrayTriangles.setPrimitiveType(sf::Lines);
+				case sf::Keyboard::Key::W: // set primitive of extracted triangles vertex array to line strip
+					vertexArrayTriangles.setPrimitiveType(sf::PrimitiveType::LineStrip);
 					break;
-				case sf::Keyboard::Scancode::R: // set primitive of extracted triangles vertex array to points
-					vertexArrayTriangles.setPrimitiveType(sf::Points);
+				case sf::Keyboard::Key::E: // set primitive of extracted triangles vertex array to lines
+					vertexArrayTriangles.setPrimitiveType(sf::PrimitiveType::Lines);
 					break;
-				case sf::Keyboard::Scancode::Num1: // switch base vertex to a triangle fan and re-extract triangles
+				case sf::Keyboard::Key::R: // set primitive of extracted triangles vertex array to points
+					vertexArrayTriangles.setPrimitiveType(sf::PrimitiveType::Points);
+					break;
+				case sf::Keyboard::Key::Num1: // switch base vertex to a triangle fan and re-extract triangles
 					vertexArray.setPrimitiveType(sf::PrimitiveType::TriangleFan);
 					vertexArrayTriangles = trianglesExtractor::vertexArrayFrom(vertexArray);
 					break;
-				case sf::Keyboard::Scancode::Num2: // switch base vertex to a triangle strip and re-extract triangles
+				case sf::Keyboard::Key::Num2: // switch base vertex to a triangle strip and re-extract triangles
 					vertexArray.setPrimitiveType(sf::PrimitiveType::TriangleStrip);
 					vertexArrayTriangles = trianglesExtractor::vertexArrayFrom(vertexArray);
 					break;
-				case sf::Keyboard::Scancode::Num3: // switch base vertex to independent quads and re-extract triangles
-					vertexArray.setPrimitiveType(sf::PrimitiveType::Quads);
-					vertexArrayTriangles = trianglesExtractor::vertexArrayFrom(vertexArray);
-					break;
-				case sf::Keyboard::Scancode::Num4: // switch base vertex to independent triangle and re-extract triangles
+				case sf::Keyboard::Key::Num3: // switch base vertex to independent triangle and re-extract triangles
 					vertexArray.setPrimitiveType(sf::PrimitiveType::Triangles);
 					vertexArrayTriangles = trianglesExtractor::vertexArrayFrom(vertexArray);
 					break;
 				}
-				break;
 			}
 		}
 	}

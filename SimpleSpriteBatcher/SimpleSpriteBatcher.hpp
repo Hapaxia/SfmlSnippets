@@ -36,10 +36,10 @@ private:
 		const sf::IntRect rect{ sprite->getTextureRect() };
 
 		sf::Vector2f shapeTopLeft{ 0.f, 0.f };
-		sf::Vector2f shapeBottomRight(rect.getSize());
+		sf::Vector2f shapeBottomRight(rect.size);
 		sf::Vector2f shapeTopRight{ shapeBottomRight.x, shapeTopLeft.y };
 		sf::Vector2f shapeBottomLeft{ shapeTopLeft.x, shapeBottomRight.y };
-		const sf::Vector2f textureTopLeft(rect.getPosition());
+		const sf::Vector2f textureTopLeft(rect.position);
 		const sf::Vector2f textureBottomRight{ textureTopLeft + shapeBottomRight };
 		const sf::Vector2f textureTopRight{ textureBottomRight.x, textureTopLeft.y };
 		const sf::Vector2f textureBottomLeft{ textureTopLeft.x, textureBottomRight.y };

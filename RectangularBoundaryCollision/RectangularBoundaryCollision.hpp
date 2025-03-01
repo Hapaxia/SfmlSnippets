@@ -31,7 +31,7 @@ bool areColliding(const T1& object1, const T2& object2, const int collisionLevel
 	// LEVEL 0 (axis-aligned bounding box)
 	const sf::Transform transform1{ object1.getTransform() };
 	const sf::Transform transform2{ object2.getTransform() };
-	const bool level0{ transform1.transformRect(object1.getLocalBounds()).intersects(transform2.transformRect(object2.getLocalBounds())) };
+	const bool level0{ transform1.transformRect(object1.getLocalBounds()).findIntersection(transform2.transformRect(object2.getLocalBounds())) };
 	if (!level0 || collisionLevel == 0)
 		return level0;
 
@@ -40,16 +40,14 @@ bool areColliding(const T1& object1, const T2& object2, const int collisionLevel
 	const sf::Transform inverseTransform2{ object2.getInverseTransform() };
 	const sf::FloatRect rect1Bounds{ object1.getLocalBounds() };
 	const sf::FloatRect rect2Bounds{ object2.getLocalBounds() };
-	const sf::Vector2f rect1Size{ rect1Bounds.width, rect1Bounds.height };
-	const sf::Vector2f rect2Size{ rect2Bounds.width, rect2Bounds.height };
 	const sf::Vector2f rect1TopLeft{ inverseTransform2.transformPoint(transform1.transformPoint({ 0.f, 0.f })) };
-	const sf::Vector2f rect1TopRight{ inverseTransform2.transformPoint(transform1.transformPoint({ rect1Size.x, 0.f })) };
-	const sf::Vector2f rect1BottomRight{ inverseTransform2.transformPoint(transform1.transformPoint(rect1Size)) };
-	const sf::Vector2f rect1BottomLeft{ inverseTransform2.transformPoint(transform1.transformPoint({ 0.f, rect1Size.y })) };
+	const sf::Vector2f rect1TopRight{ inverseTransform2.transformPoint(transform1.transformPoint({ rect1Bounds.size.x, 0.f })) };
+	const sf::Vector2f rect1BottomRight{ inverseTransform2.transformPoint(transform1.transformPoint(rect1Bounds.size)) };
+	const sf::Vector2f rect1BottomLeft{ inverseTransform2.transformPoint(transform1.transformPoint({ 0.f, rect1Bounds.size.y })) };
 	const sf::Vector2f rect2TopLeft{ inverseTransform1.transformPoint(transform2.transformPoint({ 0.f, 0.f })) };
-	const sf::Vector2f rect2TopRight{ inverseTransform1.transformPoint(transform2.transformPoint({ rect2Size.x, 0.f })) };
-	const sf::Vector2f rect2BottomRight{ inverseTransform1.transformPoint(transform2.transformPoint(rect2Size)) };
-	const sf::Vector2f rect2BottomLeft{ inverseTransform1.transformPoint(transform2.transformPoint({ 0.f, rect2Size.y })) };
+	const sf::Vector2f rect2TopRight{ inverseTransform1.transformPoint(transform2.transformPoint({ rect2Bounds.size.x, 0.f })) };
+	const sf::Vector2f rect2BottomRight{ inverseTransform1.transformPoint(transform2.transformPoint(rect2Bounds.size)) };
+	const sf::Vector2f rect2BottomLeft{ inverseTransform1.transformPoint(transform2.transformPoint({ 0.f, rect2Bounds.size.y })) };
 	const bool level1{ (
 		(rect1Bounds.contains(rect2TopLeft)) ||
 		(rect1Bounds.contains(rect2TopRight)) ||
@@ -70,7 +68,7 @@ bool areColliding(const T1& object1, const T2& object2, const int collisionLevel
 		rect1TopRight,
 		rect1TopLeft,
 	};
-	if (!impl::satRectangleAndPoints(rect2Size, rect1Points))
+	if (!impl::satRectangleAndPoints(rect2Bounds.size, rect1Points))
 		return false;
 	std::array<sf::Vector2f, 4> rect2Points
 	{
@@ -79,7 +77,7 @@ bool areColliding(const T1& object1, const T2& object2, const int collisionLevel
 		rect2TopRight,
 		rect2TopLeft,
 	};
-	return impl::satRectangleAndPoints(rect1Size, rect2Points);
+	return impl::satRectangleAndPoints(rect1Bounds.size, rect2Points);
 }
 
 

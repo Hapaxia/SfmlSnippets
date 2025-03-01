@@ -2,7 +2,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2022-2024 M.J.Silk
+// Copyright (c) 2022-2025 M.J.Silk
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -48,6 +48,8 @@
 //        ----
 //
 //    If the window is too large (1600x900) for your resolution, you can uncomment the following define line to halve the window size (to 800x450) and scale the texts to match: #define HALVE_WINDOW_SIZE
+// 
+//    This example is for use with SFML 3.
 //
 //
 ////////////////////////////////////////////////////////////////
@@ -76,7 +78,7 @@ int main()
 
 
 	sf::Font font;
-	if (!font.loadFromFile("resources/fonts/arial.ttf"))
+	if (!font.openFromFile("resources/fonts/arial.ttf"))
 	{
 		std::cerr << "ERROR LOADING FONT" << std::endl;
 		return EXIT_FAILURE;
@@ -87,11 +89,10 @@ int main()
 	auto setTextOriginToCenter = [](sf::Text& text)
 	{
 		const sf::FloatRect textLocalBounds{ text.getLocalBounds() };
-		text.setOrigin(textLocalBounds.left + (textLocalBounds.width / 2.f), textLocalBounds.top + (textLocalBounds.height / 2.f));
+		text.setOrigin(textLocalBounds.position + (textLocalBounds.size / 2.f));
 	};
 
-	sf::Text text;
-	text.setFont(font);
+	sf::Text text(font);
 	text.setCharacterSize(64u);
 	text.setFillColor(sf::Color::White);
 	text.setString("ABCDEF\nGHIJKLM\nNOPQRST\n\tUVWXYZ\n12345\n67890");
@@ -110,32 +111,39 @@ int main()
 	textCharacterHighlight.setOutlineColor(sf::Color::White);
 	textCharacterHighlight.setOutlineThickness(2.f);
 
-	sf::Text feedbackText;
-	feedbackText.setFont(font);
+	sf::Text feedbackText(font);
 	feedbackText.setCharacterSize(36u);
 	feedbackText.setFillColor(sf::Color::Green);
 	feedbackText.setPosition({ 5.f, 5.f });
 
 #ifdef HALVE_WINDOW_SIZE
-	text.setScale(0.5f, 0.5f);
-	textSingleLine.setScale(0.5f, 0.5f);
-	textCharacterHighlight.setScale(0.5f, 0.5f);
-	feedbackText.setScale(0.5f, 0.5f);
+	text.setScale({ 0.5f, 0.5f });
+	textSingleLine.setScale({ 0.5f, 0.5f });
+	textCharacterHighlight.setScale({ 0.5f, 0.5f });
+	feedbackText.setScale({ 0.5f, 0.5f });
 #endif // HALVE_WINDOW_SIZE
 
 
 
-	sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), "");
+	sf::RenderWindow window(sf::VideoMode(windowSize), "");
 
 	while (window.isOpen())
 	{
 		// EVENTS
 
-		sf::Event event;
-		while (window.pollEvent(event))
+		while (const auto event{ window.pollEvent() })
 		{
-			if ((event.type == sf::Event::Closed) || ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)))
+			if (event->is<sf::Event::Closed>())
 				window.close();
+			else if (const auto keyPressed{ event->getIf<sf::Event::KeyPressed>() })
+			{
+				switch (keyPressed->code)
+				{
+				case sf::Keyboard::Key::Escape:
+					window.close();
+					break;
+				}
+			}
 		}
 
 

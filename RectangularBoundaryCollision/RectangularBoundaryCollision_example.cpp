@@ -2,7 +2,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2017-2024 M.J.Silk
+// Copyright (c) 2017-2025 M.J.Silk
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -60,6 +60,8 @@
 //       -------
 //
 //   A texture of your choice can be used although one is provided. The path used here is from the root of SfmlSnippets. (SfmlSnippets/resources/images/sw ring rainbow.png)
+// 
+//   This example is for use with SFML 3.
 //
 //
 ////////////////////////////////////////////////////////////////
@@ -86,7 +88,7 @@ int main()
 #endif // USE_TEXTURE
 
 #ifdef USE_RECTANGLESHAPES
-	std::vector<sf::RectangleShape> objects(2);
+	std::vector<sf::RectangleShape> objects(2u);
 	for (auto& object : objects)
 	{
 		object.setSize({ 150.f, 100.f });
@@ -96,24 +98,24 @@ int main()
 #endif // USE_TEXTURE
 	}
 	objects[0].setFillColor(sf::Color::Green);
-	objects[1].setFillColor(sf::Color(255, 255, 255, 128));
-	objects[0].setRotation(10.f);
-	objects[1].setRotation(25.f);
+	objects[1].setFillColor(sf::Color(255u, 255u, 255u, 128u));
+	objects[0].setRotation(sf::degrees(10.f));
+	objects[1].setRotation(sf::degrees(25.f));
 #endif // USE_RECTANGLESHAPES
 #ifdef USE_SPRITES
-	std::vector<sf::Sprite> objects(2, sf::Sprite(texture));
+	std::vector<sf::Sprite> objects(2u, sf::Sprite(texture));
 	for (auto& object : objects)
 	{
 		object.setOrigin(sf::Vector2f(texture.getSize()) / 2.f);
 		object.setScale({ 0.5f, 0.5f });
 	}
 	objects[0].setColor(sf::Color::Green);
-	objects[1].setColor(sf::Color(255, 255, 255, 128));
-	objects[0].setRotation(10.f);
-	objects[1].setRotation(25.f);
+	objects[1].setColor(sf::Color(255u, 255u, 255u, 128u));
+	objects[0].setRotation(sf::degrees(10.f));
+	objects[1].setRotation(sf::degrees(25.f));
 #endif // USE_SPRITES
 
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Sprite/Rectangle Collision", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode({ 800u, 600u }), "Sprite/Rectangle Collision", sf::Style::Default);
 	window.setFramerateLimit(60);
 
 	objects[1].setPosition(sf::Vector2f(window.getSize() / 2u));
@@ -121,41 +123,40 @@ int main()
 	sf::Clock clock;
 	while (window.isOpen())
 	{
-		sf::Event event;
-		while (window.pollEvent(event))
+		while (const auto event{ window.pollEvent() })
 		{
-			if (event.type == sf::Event::Closed)
+			if (event->is<sf::Event::Closed>())
 				window.close();
 		}
 
-		sf::Time frameTime{ clock.restart() };
-		float dt{ frameTime.asSeconds() };
+		const sf::Time frameTime{ clock.restart() };
+		const float dt{ frameTime.asSeconds() };
 
-		const float controlMultiplier{ sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ? boostMultiplier : 1.f };
+		const float controlMultiplier{ sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) ? boostMultiplier : 1.f };
 
 		sf::Vector2i movementControl;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
 			--movementControl.y;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
 			++movementControl.y;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
 			--movementControl.x;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
 			++movementControl.x;
 		sf::Vector2f movement(movementControl);
 		if (movementControl.x != 0 && movementControl.y != 0)
 			movement *= 0.707f;
 		objects[0].move(movement * movementSpeed * controlMultiplier * dt);
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::RBracket))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RBracket))
 			objects[0].scale({ 1.f + (scaleSpeed * controlMultiplier * dt), 1.f + (scaleSpeed * controlMultiplier * dt) });
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LBracket))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LBracket))
 			objects[0].scale({ 1.f / (1.f + (scaleSpeed * controlMultiplier * dt)), 1.f / (1.f + (scaleSpeed * controlMultiplier * dt)) });
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Period))
-			objects[0].rotate(rotationSpeed * controlMultiplier * dt);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Comma))
-			objects[0].rotate(-rotationSpeed * controlMultiplier * dt);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Period))
+			objects[0].rotate(sf::degrees(rotationSpeed * controlMultiplier * dt));
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Comma))
+			objects[0].rotate(sf::degrees(-rotationSpeed * controlMultiplier * dt));
 
 		const sf::Time collisionStartTime{ clock.getElapsedTime() };
 		const bool areColliding{ collision::areColliding(objects[0], objects[1]) }; // this is the collision detection section

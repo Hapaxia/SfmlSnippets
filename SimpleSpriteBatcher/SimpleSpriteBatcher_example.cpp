@@ -2,7 +2,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2023-2024 M.J.Silk
+// Copyright (c) 2023-2025 M.J.Silk
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -52,7 +52,7 @@
 //       CUSTOMISATION
 //       -------------
 //
-//   You can (should) change the number of sprites ('n') created (but not too many!) so that they lower your frame-rate using this line: sprites.resize('n');
+//   You can (should) change the number of sprites ('n') created (but not too many!) so that they lower your frame-rate using this line: sprites.resize('n', sf::Sprite(texture));
 //
 //
 //        ----
@@ -64,6 +64,8 @@
 //    The texture is available in the resources folder, which is in the root folder. You may need to adjust the path.
 //    You may also need to adjust the path of the included header ("SimpleSpriteBatcher.hpp") depending on your approach.
 //    Remember to test in both debug and release modes for comparisons. The batcher may be less effective in debug mode.
+// 
+//    This example is for use with SFML 3.
 //
 //
 ////////////////////////////////////////////////////////////////
@@ -104,7 +106,7 @@ int main()
 	// sprites
 	std::vector<sf::Sprite> sprites;
 	// personal values for showcase: 5k, 50k, 100k, 250k, 500k, 1000k.
-	sprites.resize(5000u); // change this to a value that is affects your frame-rate. this will be different on every system. first, try a few thousand. for fast computers/graphics cards, try tens (or even hundreds!) of thousands.
+	sprites.resize(5000u, sf::Sprite(texture)); // change this to a value that is affects your frame-rate. this will be different on every system. first, try a few thousand. for fast computers/graphics cards, try tens (or even hundreds!) of thousands.
 	for (auto& sprite : sprites)
 	{
 		sprite.setTexture(texture);
@@ -113,7 +115,7 @@ int main()
 		const float scale{ ((rand() % 950) + 50) / 100.f };
 		sprite.setScale({ scale , scale });
 		sprite.setPosition({ static_cast<float>(rand() % windowSize.x), static_cast<float>(rand() % windowSize.y) });
-		sprite.setRotation((rand() % 1000) * 0.36f);
+		sprite.setRotation(sf::degrees((rand() % 1000) * 0.36f));
 	}
 
 
@@ -130,12 +132,12 @@ int main()
 
 
 	sf::Clock clock; // clock for measuring FPS
-	sf::RenderWindow window(sf::VideoMode(windowSize.x, windowSize.y), "");
+	sf::RenderWindow window(sf::VideoMode(windowSize), "");
 	while (window.isOpen())
 	{
 		// update sprites
 		for (std::size_t i{ 0u }; i < sprites.size(); ++i)
-			sprites[i].rotate(2.f);
+			sprites[i].rotate(sf::degrees(2.f));
 
 		// batch sprites
 		if (useBatcher)
@@ -156,13 +158,22 @@ int main()
 		window.display();
 
 		// events
-		sf::Event event;
-		while (window.pollEvent(event))
+		while (const auto event{ window.pollEvent() })
 		{
-			if ((event.type == sf::Event::Closed) || ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)))
+			if (event->is<sf::Event::Closed>())
 				window.close();
-			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Space))
-				useBatcher = !useBatcher;
+			else if (const auto keyPressed{ event->getIf<sf::Event::KeyPressed>() })
+			{
+				switch (keyPressed->code)
+				{
+				case sf::Keyboard::Key::Escape:
+					window.close();
+					break;
+				case sf::Keyboard::Key::Space:
+					useBatcher = !useBatcher;
+					break;
+				}
+			}
 		}
 	}
 }

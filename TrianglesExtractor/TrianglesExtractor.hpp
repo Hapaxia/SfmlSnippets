@@ -43,7 +43,7 @@ sf::VertexBuffer vertexBufferFromVertexArray(const sf::VertexArray& vertexArray)
 
 
 
-std::vector<sf::Vertex> verticesFrom(const std::vector<sf::Vertex>& vertices, sf::PrimitiveType primitiveType)
+std::vector<sf::Vertex> verticesFrom(const std::vector<sf::Vertex>& vertices, const sf::PrimitiveType primitiveType)
 {
 	if (primitiveType == sf::PrimitiveType::Triangles)
 		return vertices;
@@ -56,27 +56,15 @@ std::vector<sf::Vertex> verticesFrom(const std::vector<sf::Vertex>& vertices, sf
 	std::size_t numberOfVerticesPerPrimitiveOrig{ 1u };
 	std::size_t numberOfVerticesPerPrimitiveNew{ 3u };
 	std::size_t baseSizeRemoval{ 2u };
-	if (primitiveType == sf::PrimitiveType::Quads)
-	{
-		numberOfVerticesPerPrimitiveOrig = 4u;
-		numberOfVerticesPerPrimitiveNew = 6u;
-		baseSizeRemoval = 0u;
-	}
 	const std::size_t numberOfPrimitives{ (vertices.size() - baseSizeRemoval) / numberOfVerticesPerPrimitiveOrig };
 	result.resize(numberOfPrimitives * numberOfVerticesPerPrimitiveNew);
 	for (std::size_t p{ 0u }; p < numberOfPrimitives; ++p)
 	{
 		const std::size_t startVertexOrig{ p * numberOfVerticesPerPrimitiveOrig };
 		const std::size_t startVertexNew{ p * numberOfVerticesPerPrimitiveNew };
-		result[startVertexNew + 0u] = (primitiveType == sf::TriangleFan) ? vertices[0u] : vertices[startVertexOrig + 0u];
+		result[startVertexNew + 0u] = (primitiveType == sf::PrimitiveType::TriangleFan) ? vertices[0u] : vertices[startVertexOrig + 0u];
 		result[startVertexNew + 1u] = vertices[startVertexOrig + 1u];
 		result[startVertexNew + 2u] = vertices[startVertexOrig + 2u];
-		if (primitiveType == sf::PrimitiveType::Quads)
-		{
-			result[startVertexNew + 3u] = vertices[startVertexOrig + 0u];
-			result[startVertexNew + 4u] = vertices[startVertexOrig + 2u];
-			result[startVertexNew + 5u] = vertices[startVertexOrig + 3u];
-		}
 	}
 	return result;
 }
