@@ -1,4 +1,4 @@
-Get Character At Coord (https://github.com/Hapaxia/SfmlSnippets/tree/master/GetCharacterAtCoord)
+Simple Sprite Batcher (https://github.com/Hapaxia/SfmlSnippets/tree/master/SimpleSpriteBatcher)
 
 Copyright (c) 2023-2024 M.J.Silk
 
